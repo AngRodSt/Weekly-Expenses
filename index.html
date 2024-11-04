@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Expenses</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+
+<body class="min-h-screen bg-gradient-to-r  from-amber-200 to-emerald-200 font-poppins p-10">
+    <h1 class=" text-teal-700 font-bold text-center text-3xl uppercase m-10 ">Weekly Expenses</h1>
+    <div class="container mx-auto max-w-7xl bg-white rounded-3xl p-10 md:flex gap-10 shadow-green-950 shadow-2xl">
+        <div class="w-full md:w-1/2" id="right">
+            <h2 class="text-center mb-8 text-2xl text-gray-400">Add your expenses here</h2>
+            <!-- <div class="bg-red-200 text-red-700 px-5 py-3 mb-5 rounded-lg border border-red-300 text-center">All field are mandatory</div> -->
+            <form class="flex flex-col gap-3" id="form-expenses">
+                <label for="expense">Expense: </label>
+                <input class="border p-2 rounded-md" type="text" name="expense" id="expense" placeholder="Expense name">
+                <label for="amount">Amount: </label>
+                <input class="border p-2 rounded-md" type="text" name="amount" id="amount" placeholder="Amount in $">
+                <button type="submit" class="w-full md:w-1/2 justify-center m-auto mt-5 mb-5 p-1 rounded-lg uppercase bg-green-200 border border-green-400 text-green-900 font-bold  transform transition-transform duration-300 hover:scale-105">Add</button>
+            </form>
+        </div>
+        <div class="w-full md:w-1/2" id="left">
+            <h2 class="text-center mb-10 text-2xl text-gray-400">List</h2>
+            <div  id="expenses-block">
+                <ul id="expenses-list" class="mb-5" >
+                    <!-- <div class="p-4 border flex md:flex-row flex-col justify-between">
+                        <p class="mt-2 text-center">Comida: </p>
+                        <p class="bg-green-200 border border-green-300 px-2 py-1 font-bold text-center mb-1 text-green-900  rounded-md">$400</p>
+                        <button class="bg-red-600  text-white px-2 py-1 rounded-md mb-1">Borrar x</button>
+                    </div> -->
+                    
+                </ul>
+            </div>
+            <div class="justify-center align-middle md:pt-8" id="budget-block">
+                <div class="bg-orange-100 text-orange-700 px-5 py-3 mb-5 rounded-lg border border-orange-200">
+                    <p>Budget: $ <span id="budget"></span></p>
+                </div>
+                <div class="bg-green-100 text-green-700 px-5 py-3 mb-5 rounded-lg border border-green-200">
+                    <p>Remaining: $ <span id="remaining"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+<script src="./js/index.js"></script>
+</html>
