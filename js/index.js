@@ -1,7 +1,7 @@
 // Declarations
 const form = document.querySelector('#form-expenses');
 const expenseList = document.querySelector('#expenses-list');
-console.log(form)
+
 
 // EventListeners
 EventListeners()
@@ -25,9 +25,16 @@ class Budget {
         this.calculateRemaining();
     }
 
-    calculateRemaining(){
-            const spent = this.expenses.reduce((total,expense)=> total + Number(expense.amount), 0);
-            this.remaining = this.budget - spent;
+    calculateRemaining() {
+        const spent = this.expenses.reduce((total, expense) => total + Number(expense.amount), 0);
+        this.remaining = this.budget - spent;
+
+    }
+
+    deleteExpense(id) {
+        this.expenses = this.expenses.filter((expense) => expense.id != id);
+        iu.addExpensesHTML(this.expenses)
+        this.calculateRemaining();
 
     }
 }
@@ -36,7 +43,10 @@ class Budget {
 class IU {
 
     fillBudgetField(budgetObj) {
+        // Destructuring the object
         const { budget, remaining } = budgetObj
+
+        // Fill the fields
         document.querySelector('#budget').textContent = budget;
         document.querySelector('#remaining').textContent = remaining;
     }
@@ -69,14 +79,24 @@ class IU {
 
     }
 
-    updateRemaining(remaining){
+    updateRemaining(remaining) {
+        //update the remaining in the HTML
         document.querySelector('#remaining').textContent = remaining;
+        const btnForm = form.querySelector('button[type="submit"]');
+        if (remaining <= 0) {
+            this.showAlert('The budget has been exhausted', 'error');
+            setTimeout(() => {
+                btnForm.setAttribute('disabled', true);
+                btnForm.classList.add('bg-gray-200', 'border-gray-300', 'text-gray-500');
+            }, 3000);
+            return;
+        }
+        btnForm.removeAttribute('disabled');
+        btnForm.classList.remove('bg-gray-200', 'border-gray-300', 'text-gray-500')
     }
 
-
-
     addExpensesHTML(expenseObj) {
-        
+
         clearHTML();
         // Iterate with each element of the object and create the html
         expenseObj.forEach(exp => {
@@ -87,18 +107,45 @@ class IU {
                  <p class="mt-2 text-center">${expense}: </p>
                  <p class="bg-green-200 border border-green-300 px-2 py-1 font-bold text-center mb-1 text-green-900  rounded-md">$${amount}</p>
             `
+            //Create a button to delete the expense
             const btnDelete = document.createElement('button');
             btnDelete.className = 'bg-red-600  text-white px-2 py-1 rounded-md mb-1';
             btnDelete.textContent = 'Borrar x'
+            btnDelete.onclick = (e) => {
+                budget.deleteExpense(id);
+                const { remaining } = budget;
+                this.updateRemaining(remaining);
+                this.updateColorRemaining(budget);
+            }
             div.appendChild(btnDelete);
             expenseList.appendChild(div);
         });
+
+    }
+
+    updateColorRemaining(budgetObj) {
+
+        //update the color of the remaining
+        const { budget, remaining } = budgetObj
+        const remainingHTML = document.querySelector('#remaining').parentElement.parentElement;
+        if ((budget / 4) > remaining) {
+            remainingHTML.className = 'bg-red-100 text-red-700 px-5 py-3 mb-5 rounded-lg border border-red-200'
+        }
+        else if ((budget / 2) > remaining) {
+            remainingHTML.className = 'bg-orange-100 text-orange-700 px-5 py-3 mb-5 rounded-lg border border-orange-200"'
+        }
+        else {
+            remainingHTML.className = 'bg-green-100 text-green-700 px-5 py-3 mb-5 rounded-lg border border-green-200'
+        }
+
     }
 }
 const iu = new IU();
 let budget;
-// Function
+
+// Functions
 function askBudget() {
+    //Ask the user for the budget
     const budgetUser = prompt("what is your budget?")
 
     if (budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === 'null') {
@@ -106,7 +153,6 @@ function askBudget() {
     }
     budget = new Budget(budgetUser);
     iu.fillBudgetField(budget)
-    console.log(budget)
 }
 
 function validationInput(e) {
@@ -114,36 +160,37 @@ function validationInput(e) {
     //Prevent the form to submit
     e.preventDefault();
 
+    //Get the values from the form
     const expense = document.querySelector('#expense').value;
     const amount = Number(document.querySelector('#amount').value);
 
+    //Validate the values
     if (expense == "" || amount == "") {
         iu.showAlert('All the field are mandatory', 'error');
-        console.log(expense, amount)
         return;
     }
     else if (amount === 'null' || isNaN(amount) || amount <= 0) {
         iu.showAlert('Invalid amount', 'error');
         return;
     }
-
-
+    //Create the object with the expense and show the alert
     const expenseObj = { expense, amount, id: Date.now() }
-
     iu.showAlert('Successfully added', 'succes');
     budget.addNewExpense(expenseObj)
 
+    //Print the expenses and update the remaining
     const { expenses, remaining } = budget;
     iu.addExpensesHTML(expenses)
     form.reset();
-    console.log(remaining)
     iu.updateRemaining(remaining)
-    
+    iu.updateColorRemaining(budget);
+
 }
 
 
-function clearHTML(){
-    while(expenseList.firstChild){
+function clearHTML() {
+    //Clean the HTML when a new expense is added
+    while (expenseList.firstChild) {
         expenseList.removeChild(expenseList.firstChild);
     }
 }
