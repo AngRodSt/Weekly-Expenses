@@ -146,14 +146,18 @@ let budget;
 // Functions
 function askBudget() {
     //Ask the user for the budget
-    const budgetUser = prompt("what is your budget?")
+    let budgetUser = prompt("what is your budget? enter the amount ")
 
-    if (budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === 'null') {
-        window.location.reload()
+    while(budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === null) {
+        budgetUser = prompt("Invalid amount, try again ");
+    }
+    if(budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === null) {
+        window.location.reload();
     }
     budget = new Budget(budgetUser);
     iu.fillBudgetField(budget)
 }
+
 
 function validationInput(e) {
 
