@@ -143,19 +143,27 @@ class IU {
 const iu = new IU();
 let budget;
 
+
+
 // Functions
 function askBudget() {
+    let budgetUser;
     //Ask the user for the budget
-    let budgetUser = prompt("what is your budget? enter the amount ")
 
-    while(budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === null) {
-        budgetUser = prompt("Invalid amount, try again ");
+    while(true){
+        budgetUser = prompt("what is your budget? enter the amount ")
+
+        budgetUser = Number(budgetUser);
+        if(!isNaN(budgetUser) && budgetUser > 0){
+            budget = new Budget(budgetUser);
+            iu.fillBudgetField(budget)
+            return ;
+        }
+        else{
+            alert("Invalid amount, try again ");
+        }
     }
-    if(budgetUser === '' || budgetUser <= 0 || isNaN(budgetUser) || budgetUser === null) {
-        window.location.reload();
-    }
-    budget = new Budget(budgetUser);
-    iu.fillBudgetField(budget)
+
 }
 
 
